@@ -1,0 +1,30 @@
+.bti3 {
+  height: 186px;
+  position: relative;
+  width: 218px;
+}
+
+.bti3 .view {
+  height: 186px;
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bti3 .text-wrapper {
+  color: #592d1487;
+  font-family: 'Inter-Medium', Helvetica;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 36px;
+  text-align: center;
+  width: 218px;
+}
+
+.bti3 .thumbs-up {
+  height: 93px;
+  width: 81px;
+}

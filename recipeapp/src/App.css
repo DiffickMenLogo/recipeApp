@@ -1,0 +1,25 @@
+.content {
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.leftbottomimage {
+  width: 338px;
+  height: 675px;
+  flex-shrink: 0;
+  position: absolute;
+  left: calc(0% - 5%);
+  bottom: calc(0% - 20%);
+}
+
+.image {
+  width: 750px;
+  height: 842px;
+  flex-shrink: 0;
+  position: absolute;
+  right: -2%;
+  bottom: -10%;
+}
