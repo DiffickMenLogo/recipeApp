@@ -4,16 +4,17 @@ import './ContentText.scss'
 export const ContentText = () => {
   return (
     <div className='contactText'>
-      <div className='view'>
-        <p className='div'>
-          <span className='text-wrapper'>
+      <div className='contactText__view'>
+        <p>
+          <span>
             Простые
             <br />
           </span>
-          <span className='span'>и</span>
-          <span className='text-wrapper'> вкусные рецепты</span>
+          <span className='brown'>и</span>
+          <span> вкусные</span>
+          <span className='brown'> рецепты</span>
         </p>
-        <div className='text-wrapper-2'>Более 1000 рецептов</div>
+        <div className='contactText__view__undertext'>Более 1000 рецептов</div>
       </div>
     </div>
   )
