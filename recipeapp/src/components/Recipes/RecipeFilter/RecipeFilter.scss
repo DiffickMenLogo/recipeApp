@@ -1,0 +1,30 @@
+.recipeFilter {
+  width: 100%;
+  padding: 10px;
+  padding-bottom: 50px;
+  border-radius: 10px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #592e15;
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 40px;
+    margin-top: 20px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+}
