@@ -20,13 +20,27 @@ export const Recipes = () => {
   const [searchValue, setSearchValue] = useState(['apple', 'banana'])
   const [searchInputValue, setSearchInputValue] = useState('')
   const [perPage, setPerPage] = useState(12)
+
+  //filters
+  const [maxReadyTime, setMaxReadyTime] = useState()
+  const [minCalories, setMinCalories] = useState()
+  const [diet, setDiet] = useState()
+  const [cuisine, setCuisine] = useState()
+  const [type, setType] = useState()
+
   // const [q, setQ] = useState('')
   const [recipes, setRecipes] = useState([])
   // const [newRecipes, setNewRecipes] = useState([])
 
-  const { data, isLoading } = recipeApi.useFindByIngredientsQuery({
-    ingredients: searchValue.join(','),
+  const { data, isLoading } = recipeApi.useComplexSearchQuery({
+    includeIngredients: searchValue.join(','),
     number: perPage,
+    addRecipeInformation: true,
+    maxReadyTime: maxReadyTime,
+    minCalories: minCalories,
+    diet: diet,
+    cuisine: cuisine,
+    type: type,
   })
 
   // const { data: newRecipesData, isLoading: newIsLoading } = edamamApi.useGetRecipeQuery({
@@ -44,8 +58,9 @@ export const Recipes = () => {
   // }, [newRecipes])
 
   useEffect(() => {
+    console.log(data, 'data')
     if (data) {
-      setRecipes(data)
+      setRecipes(data.results)
     }
   }, [data])
 
@@ -98,7 +113,18 @@ export const Recipes = () => {
           {isLoading ? 'Загрузка...' : recipes.map((item, index) => <RecipeItem key={index} recipe={item} />)}
         </div>
         <div className='recipes__content__right'>
-          <RecipeFilter />
+          <RecipeFilter
+            diet={diet}
+            setDiet={setDiet}
+            maxReadyTime={maxReadyTime}
+            setMaxReadyTime={setMaxReadyTime}
+            minCalories={minCalories}
+            setMinCalories={setMinCalories}
+            cuisine={cuisine}
+            setCuisine={setCuisine}
+            type={type}
+            setType={setType}
+          />
         </div>
       </div>
     </div>

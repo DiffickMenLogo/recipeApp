@@ -17,7 +17,7 @@ export const RecipeItem = ({ recipe }) => {
       <div className='recipeItem__bottom'>
         <div className='recipeItem__bottom__time'>
           <img src={Time} alt='Time' />
-          <span>10 минут</span>
+          <span>{recipe.readyInMinutes} минут</span>
         </div>
         <div className='recipeItem__bottom__like'>
           <img src={Like} alt='Like' />
