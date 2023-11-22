@@ -31,7 +31,6 @@ export const Content = () => {
         }}
       >
         {btiArr.map((item, index) => {
-          console.log(item)
           return <Bti key={index} image={item.image} text={item.text} />
         })}
       </div>

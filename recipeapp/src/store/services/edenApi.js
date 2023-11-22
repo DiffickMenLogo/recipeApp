@@ -13,11 +13,12 @@ export const edenApi = createApi({
       query: (body) => ({
         url: '/ocr/receipt_parser',
         headers: {
+          'Accept': 'application/json',
           'Content-Type': `application/json`,
           'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGJlZjdkZDgtOTg4Ny00YzMzLWIxMmItYzIwOTA3MDI1YjE0IiwidHlwZSI6ImFwaV90b2tlbiJ9.dvTxY8kO20ZbD9z5vvYCociMg1YMZzO209rPdV7Kfjo'
         },
-        body,
         method: 'POST',
+        body
       })
     })
   }),

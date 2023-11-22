@@ -5,18 +5,43 @@ import { RecipeItem } from './RecipeItem/RecipeItem'
 import { RecipeFilter } from './RecipeFilter/RecipeFilter'
 import { recipeApi } from '../../store/services/recipeApi'
 import { TextField } from '@mui/material'
+import { edamamApi } from '../../store/services/edamamApi'
+import { useSelector } from 'react-redux'
 
 export const Recipes = () => {
+  const reduxSearchValue = useSelector((state) => state.searchValue.value)
+
+  useEffect(() => {
+    if (reduxSearchValue) {
+      setSearchValue(reduxSearchValue)
+    }
+  }, [reduxSearchValue])
+
   const [searchValue, setSearchValue] = useState(['apple', 'banana'])
   const [searchInputValue, setSearchInputValue] = useState('')
   const [perPage, setPerPage] = useState(12)
-
+  // const [q, setQ] = useState('')
   const [recipes, setRecipes] = useState([])
+  // const [newRecipes, setNewRecipes] = useState([])
 
   const { data, isLoading } = recipeApi.useFindByIngredientsQuery({
     ingredients: searchValue.join(','),
     number: perPage,
   })
+
+  // const { data: newRecipesData, isLoading: newIsLoading } = edamamApi.useGetRecipeQuery({
+  //   q,
+  // })
+
+  // useEffect(() => {
+  //   if (newRecipesData) {
+  //     setNewRecipes(newRecipesData)
+  //   }
+  // }, [newRecipesData])
+
+  // useEffect(() => {
+  //   console.log(newRecipes, 'newRecipes')
+  // }, [newRecipes])
 
   useEffect(() => {
     if (data) {
