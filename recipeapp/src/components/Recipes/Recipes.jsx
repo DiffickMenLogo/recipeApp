@@ -17,7 +17,7 @@ export const Recipes = () => {
     }
   }, [reduxSearchValue])
 
-  const [searchValue, setSearchValue] = useState(['apple', 'banana'])
+  const [searchValue, setSearchValue] = useState([])
   const [searchInputValue, setSearchInputValue] = useState('')
   const [perPage, setPerPage] = useState(12)
 
@@ -106,7 +106,7 @@ export const Recipes = () => {
         </div>
       </div>
       <div className='recipes__search__bottom'>
-        Найдено <span>100</span> рецептов
+        Найдено <span>{recipes.length}</span> рецептов
       </div>
       <div className='recipes__content'>
         <div className='recipes__content__left'>

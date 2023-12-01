@@ -3,13 +3,15 @@ import { configureStore } from '@reduxjs/toolkit'
 import { recipeApi } from './services/recipeApi'
 import { edenApi } from './services/edenApi'
 import searchSlice from './slices/searchSlice'
+import favoritesSlice from './slices/favoritesSlice'
 import { edamamApi } from './services/edamamApi'
 
 const combineReducers = {
   [recipeApi.reducerPath]: recipeApi.reducer,
   [edenApi.reducerPath]: edenApi.reducer,
   [edamamApi.reducerPath]: edamamApi.reducer,
-  searchValue: searchSlice
+  searchValue: searchSlice,
+  favorites: favoritesSlice
 }
 
 const store = configureStore({

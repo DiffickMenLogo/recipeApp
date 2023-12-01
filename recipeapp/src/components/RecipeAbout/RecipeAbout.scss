@@ -1,6 +1,7 @@
 .recipeAbout {
   width: 70%;
   margin: 0 auto;
+  margin-bottom: 50px;
 
   &__top {
     display: flex;
@@ -77,8 +78,10 @@
   &__text {
     color: rgba(89, 46, 21, 0.53);
     font-family: Inter;
-    font-size: 20px;
+    font-size: 26px;
     font-style: normal;
     font-weight: 500;
+    line-height: 30px;
+    letter-spacing: 0.01em;
   }
 }

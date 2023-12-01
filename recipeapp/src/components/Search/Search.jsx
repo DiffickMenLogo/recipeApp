@@ -18,6 +18,9 @@ export const Search = () => {
 
   const navigate = useNavigate()
 
+  const [searchItems, setSearchItems] = useState([])
+  const [searchValueHandle, setSearchValueHandle] = useState('')
+
   const makeReq = (e) => {
     if (url !== '') {
       const body = {
@@ -53,10 +56,29 @@ export const Search = () => {
     }
   }, [parse])
 
+  const simpleSearch = () => {
+    dispatch(setSearchValue(searchItems))
+    navigate('/recipes')
+  }
+
   return (
     <div className='search'>
       <div className='search__box'>
-        <Input disableUnderline={true} placeholder='Введите ингредиенты...' sx={{ width: '80%', height: '100%' }} variant='standard'></Input>
+        <Input
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              setSearchItems((searchItems) => [...searchItems, e.target.value])
+              setSearchValueHandle('')
+            }
+          }}
+          onChange={(e) => setSearchValueHandle(e.target.value)}
+          value={searchValueHandle}
+          disableUnderline={true}
+          placeholder='Введите ингредиенты...'
+          sx={{ width: '80%', height: '100%' }}
+          variant='standard'
+        ></Input>
         <div className='search__box__btns'>
           <img
             alt='Camera'
@@ -66,11 +88,29 @@ export const Search = () => {
             }}
             src={Camera}
           />
-          <div className='search__box__btns__searchIcon'>
+          <div onClick={simpleSearch} className='search__box__btns__searchIcon'>
             <img alt='Search' src={Searchi} />
           </div>
         </div>
+        <div
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '50%',
+            bottom: '-60%',
+            left: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          {searchItems.map((item) => (
+            <p style={{ margin: 0, padding: '10px 20px', backgroundColor: '#fff', borderRadius: '10px' }}>{item}</p>
+          ))}
+        </div>
       </div>
+
       <Modal open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClose={() => setOpen(false)}>
         <Box
           sx={{

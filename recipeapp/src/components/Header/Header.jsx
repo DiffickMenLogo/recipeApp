@@ -21,12 +21,12 @@ export const Header = () => {
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '35px' }}>
+      {/* <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '35px' }}>
         <div className='text-wrapper'>Регистрация</div>
         <div className='div-wrapper'>
           <div className='text-wrapper-4'>Войти</div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

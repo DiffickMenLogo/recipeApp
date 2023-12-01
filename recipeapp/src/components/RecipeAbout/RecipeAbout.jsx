@@ -2,14 +2,35 @@ import React, { useEffect, useMemo, useState } from 'react'
 import './RecipeAbout.scss'
 import Soup from '../../assets/Soup.png'
 import Heart from '../../assets/Heart.svg'
+import HeartRed from '../../assets/HeartRed.svg'
 import { useLocation } from 'react-router-dom'
 import { recipeApi } from '../../store/services/recipeApi'
 import { CircularProgress } from '@mui/material'
-
+import { addFavorite, removeFavorite } from '../../store/slices/favoritesSlice'
+import { useDispatch, useSelector } from 'react-redux'
 export const RecipeAbout = () => {
+  const dispatch = useDispatch()
+  const favorites = useSelector((state) => state.favorites.favorites)
+  const [favorite, setFavorite] = useState(false)
+
   const location = useLocation()
   const { data, isLoading } = recipeApi.useGetRecipeInformationQuery(location.pathname.split('/').pop())
   const [recipe, setRecipe] = useState(null)
+
+  const removeFavoriteHandle = (recipe) => {
+    dispatch(removeFavorite(recipe))
+    setFavorite(false)
+  }
+  const addFavoriteHandle = (recipe) => {
+    dispatch(addFavorite(recipe))
+    setFavorite(true)
+  }
+
+  useEffect(() => {
+    if (recipe && favorites.some((item) => item.id === recipe.id)) {
+      setFavorite(true)
+    }
+  }, [favorites, recipe])
 
   useEffect(() => {
     if (data) {
@@ -31,7 +52,11 @@ export const RecipeAbout = () => {
           <div className='recipeAbout__top__text__title'>
             {recipe?.title}
             <span>
-              <img src={Heart} alt='Heart' />
+              <img
+                src={favorite ? HeartRed : Heart}
+                alt='Heart'
+                onClick={() => (favorite ? removeFavoriteHandle(recipe) : addFavoriteHandle(recipe))}
+              />
             </span>
           </div>
           <div className='recipeAbout__top__text__text'>

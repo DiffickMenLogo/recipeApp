@@ -22,7 +22,7 @@ export const Content = () => {
         style={{
           display: 'flex',
           gap: '20px',
-          width: '70%',
+          width: '60%',
           height: '35vh',
           justifyContent: 'space-between',
           alignItems: 'center',
