@@ -7,8 +7,25 @@ import { edenApi } from '../../store/services/edenApi'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setSearchValue } from '../../store/slices/searchSlice'
+import { createWorker } from 'tesseract.js'
 export const Search = () => {
-  const [parseRecipe, { data: parse, isLoading, isSuccess }] = edenApi.useParceRecipeMutation()
+  // const [parseRecipe, { data: parse, isLoading, isSuccess }] = edenApi.useParceRecipeMutation()
+
+  const parser = async (url) => {
+    try {
+      const worker = createWorker()
+      await worker.load()
+      await worker.loadLanguage('eng')
+      await worker.initialize('eng')
+      const {
+        data: { text },
+      } = await worker.recognize(url)
+      await worker.terminate()
+      return text
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const dispatch = useDispatch()
 
@@ -21,40 +38,40 @@ export const Search = () => {
   const [searchItems, setSearchItems] = useState([])
   const [searchValueHandle, setSearchValueHandle] = useState('')
 
-  const makeReq = (e) => {
-    if (url !== '') {
-      const body = {
-        file_url: url,
-        response_as_dict: true,
-        attributes_as_list: false,
-        show_original_response: false,
-        providers: 'google',
-        language: 'en',
-      }
+  // const makeReq = (e) => {
+  //   if (url !== '') {
+  //     const body = {
+  //       file_url: url,
+  //       response_as_dict: true,
+  //       attributes_as_list: false,
+  //       show_original_response: false,
+  //       providers: 'google',
+  //       language: 'en',
+  //     }
 
-      parseRecipe(body)
-    } else {
-      alert('Заполните поле')
-    }
-  }
+  //     parseRecipe(body)
+  //   } else {
+  //     alert('Заполните поле')
+  //   }
+  // }
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate('/recipes')
-    }
-  }, [isSuccess])
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigate('/recipes')
+  //   }
+  // }, [isSuccess])
 
-  useEffect(() => {
-    if (parse) {
-      dispatch(
-        setSearchValue(
-          parse.google?.extracted_data[0].item_lines
-            .map((item) => (item.description ? item.description.split(' ').filter((word) => word.length > 2) : []))
-            .flat(),
-        ),
-      )
-    }
-  }, [parse])
+  // useEffect(() => {
+  //   if (parse) {
+  //     dispatch(
+  //       setSearchValue(
+  //         parse.google?.extracted_data[0].item_lines
+  //           .map((item) => (item.description ? item.description.split(' ').filter((word) => word.length > 2) : []))
+  //           .flat(),
+  //       ),
+  //     )
+  //   }
+  // }, [parse])
 
   const simpleSearch = () => {
     dispatch(setSearchValue(searchItems))
@@ -80,14 +97,7 @@ export const Search = () => {
           variant='standard'
         ></Input>
         <div className='search__box__btns'>
-          <img
-            alt='Camera'
-            className='search__box__btns__camera'
-            onClick={() => {
-              setOpen(true)
-            }}
-            src={Camera}
-          />
+          <img alt='Camera' className='search__box__btns__camera' src={Camera} />
           <div onClick={simpleSearch} className='search__box__btns__searchIcon'>
             <img alt='Search' src={Searchi} />
           </div>
@@ -106,12 +116,23 @@ export const Search = () => {
           }}
         >
           {searchItems.map((item) => (
-            <p style={{ margin: 0, padding: '10px 20px', backgroundColor: '#fff', borderRadius: '10px' }}>{item}</p>
+            <p
+              style={{
+                margin: 0,
+                padding: '10px 20px',
+                backgroundColor: '#fff',
+                borderRadius: '10px',
+                fontFamily: 'Inter, sans-serif',
+                color: 'rgba(89, 46, 21, 0.53)',
+              }}
+            >
+              {item}
+            </p>
           ))}
         </div>
       </div>
 
-      <Modal open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClose={() => setOpen(false)}>
+      {/* <Modal open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClose={() => setOpen(false)}>
         <Box
           sx={{
             width: '30%',
@@ -132,7 +153,7 @@ export const Search = () => {
             </Button>
           )}
         </Box>
-      </Modal>
+      </Modal> */}
     </div>
   )
 }

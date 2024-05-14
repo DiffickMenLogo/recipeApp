@@ -4,9 +4,14 @@ import Selection from '../MultiSelectItem/SelectionComponent'
 import { RecipeItem } from './RecipeItem/RecipeItem'
 import { RecipeFilter } from './RecipeFilter/RecipeFilter'
 import { recipeApi } from '../../store/services/recipeApi'
-import { TextField } from '@mui/material'
+import { Switch, TextField } from '@mui/material'
 import { edamamApi } from '../../store/services/edamamApi'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { selfApi } from '../../store/services/selfApi'
+
+import { ReactComponent as ArrowLeft } from '../../assets/ArrowLeft.svg'
+import { ReactComponent as ArrowRight } from '../../assets/ArrowRight.svg'
+import { setFavorites } from '../../store/slices/favoritesSlice'
 
 export const Recipes = () => {
   const reduxSearchValue = useSelector((state) => state.searchValue.value)
@@ -21,46 +26,90 @@ export const Recipes = () => {
   const [searchInputValue, setSearchInputValue] = useState('')
   const [perPage, setPerPage] = useState(12)
 
+  const [searchSwitch, setSearchSwitch] = useState(false)
+
+  const [searchRcipe, setSearchRcipe] = useState('')
+
+  const [page, setPage] = useState(1)
+
+  //favorites
+
+  const dispatch = useDispatch()
+
+  const user = JSON.parse(localStorage.getItem('user'))
+
+  const { data: favoritesData } = selfApi.useGetUserQuery(
+    { id: user?._id },
+    {
+      skip: !localStorage.getItem('user'),
+      refetchOnMountOrArgChange: true,
+    },
+  )
+
+  useEffect(() => {
+    if (favoritesData) {
+      dispatch(setFavorites(favoritesData?.favorites || []))
+    }
+  }, [favoritesData])
+
   //filters
   const [maxReadyTime, setMaxReadyTime] = useState()
   const [minCalories, setMinCalories] = useState()
   const [diet, setDiet] = useState()
   const [cuisine, setCuisine] = useState()
   const [type, setType] = useState()
+  const [countIngridients, setCountIngridients] = useState()
 
   // const [q, setQ] = useState('')
   const [recipes, setRecipes] = useState([])
   // const [newRecipes, setNewRecipes] = useState([])
 
-  const { data, isLoading } = recipeApi.useComplexSearchQuery({
-    includeIngredients: searchValue.join(','),
-    number: perPage,
-    addRecipeInformation: true,
-    maxReadyTime: maxReadyTime,
-    minCalories: minCalories,
-    diet: diet,
-    cuisine: cuisine,
-    type: type,
-  })
+  function convertMinutesToHoursString(minutes) {
+    const hours = Math.floor(minutes / 60)
+    const remainingMinutes = minutes % 60
+    let result = ''
 
-  // const { data: newRecipesData, isLoading: newIsLoading } = edamamApi.useGetRecipeQuery({
-  //   q,
-  // })
+    if (hours > 0) result += `${hours} ч `
+    if (remainingMinutes > 0) result += `${remainingMinutes} мин`
 
-  // useEffect(() => {
-  //   if (newRecipesData) {
-  //     setNewRecipes(newRecipesData)
-  //   }
-  // }, [newRecipesData])
+    return result.trim()
+  }
 
-  // useEffect(() => {
-  //   console.log(newRecipes, 'newRecipes')
-  // }, [newRecipes])
+  const { data, isLoading } = selfApi.useGetRecipesQuery(
+    {
+      page: page,
+      limit: perPage,
+      time: convertMinutesToHoursString(maxReadyTime),
+      calories: minCalories,
+      type: type,
+      coutIngridients: countIngridients,
+      search: searchRcipe,
+      ingredients: searchValue ? searchValue.join(',') : '',
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
+
+  const { data: recipeLength, isFetching: recipeLengthLoading } = selfApi.useGetRecipesLengtsQuery(
+    {
+      limit: perPage,
+      time: maxReadyTime,
+      calories: minCalories,
+      type: type,
+      coutIngridients: countIngridients,
+      search: searchRcipe,
+      ingredients: searchValue ? searchValue.join(',') : '',
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
 
   useEffect(() => {
     console.log(data, 'data')
     if (data) {
-      setRecipes(data.results)
+      setRecipes(data)
     }
   }, [data])
 
@@ -81,32 +130,73 @@ export const Recipes = () => {
     console.log(searchInputValue, 'searchInputValue')
   }, [searchInputValue])
 
+  const addPage = () => {
+    setPage(page + 1)
+  }
+
+  const removePage = () => {
+    if (page > 1) {
+      setPage(page - 1)
+    } else {
+      setPage(1)
+    }
+  }
+
   return (
     <div className='recipes'>
       <div className='recipes__search'>
-        <TextField
-          sx={{ width: '60%', background: 'white', borderRadius: '10px' }}
-          onChange={searchChange}
-          returnKeyType='search'
-          autoFocus={true}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              searchSubmit(e)
-            }
-          }}
-          label='Outlined'
-          variant='outlined'
-        />
-        <div className='recipes__search__items'>
-          {searchValue.map((item, index) => (
-            <div key={index} className='recipes__search__items__item'>
-              {item} <span onClick={() => setSearchValue(searchValue.filter((el) => el !== item))}>X</span>
-            </div>
-          ))}
+        <div>
+          <Switch value={searchSwitch} onChange={() => setSearchSwitch(!searchSwitch)} />
+          {searchSwitch ? (
+            <span style={{ marginLeft: '10px', color: 'white' }}>Поиск по рецептам</span>
+          ) : (
+            <span style={{ marginLeft: '10px', color: 'white' }}>Поиск по ингредиентам</span>
+          )}
         </div>
+        {searchSwitch ? (
+          <TextField
+            sx={{ width: '60%', background: 'white', borderRadius: '10px' }}
+            onChange={(e) => setSearchRcipe(e.target.value)}
+            returnKeyType='search'
+            autoFocus={true}
+            value={searchRcipe}
+            label='Поиск рецептов'
+            variant='outlined'
+          />
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <TextField
+              sx={{ width: '60%', background: 'white', borderRadius: '10px' }}
+              returnKeyType='search'
+              autoFocus={true}
+              label='Поиск рецептов'
+              variant='outlined'
+              // onChange={(e) => setSearchRcipe(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  searchSubmit(e)
+                }
+              }}
+            />
+            <div className='recipes__search__items'>
+              {searchValue.map((item, index) => (
+                <div key={index} className='recipes__search__items__item'>
+                  {item} <span onClick={() => setSearchValue(searchValue.filter((el) => el !== item))}>X</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className='recipes__search__bottom'>
-        Найдено <span>{recipes.length}</span> рецептов
+        Найдено <span>{recipeLengthLoading ? 'Загрузка...' : recipeLength.count}</span> рецептов
       </div>
       <div className='recipes__content'>
         <div className='recipes__content__left'>
@@ -124,7 +214,29 @@ export const Recipes = () => {
             setCuisine={setCuisine}
             type={type}
             setType={setType}
+            countIngridients={countIngridients}
+            setCountIngridients={setCountIngridients}
           />
+        </div>
+      </div>
+      <div className='recipes__footer'>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '35px',
+          }}
+        >
+          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} onClick={() => removePage()}>
+            <ArrowLeft />
+            Предыдущая
+          </div>
+          <div>{page}</div>
+          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} onClick={() => addPage()}>
+            Следующая
+            <ArrowRight />
+          </div>
         </div>
       </div>
     </div>

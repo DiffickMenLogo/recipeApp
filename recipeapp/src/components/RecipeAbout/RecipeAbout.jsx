@@ -8,13 +8,17 @@ import { recipeApi } from '../../store/services/recipeApi'
 import { CircularProgress } from '@mui/material'
 import { addFavorite, removeFavorite } from '../../store/slices/favoritesSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { selfApi } from '../../store/services/selfApi'
+
+import PDF from '../../assets/PDF.svg'
+import Print from '../../assets/Print.svg'
 export const RecipeAbout = () => {
   const dispatch = useDispatch()
   const favorites = useSelector((state) => state.favorites.favorites)
   const [favorite, setFavorite] = useState(false)
 
   const location = useLocation()
-  const { data, isLoading } = recipeApi.useGetRecipeInformationQuery(location.pathname.split('/').pop())
+  const { data, isLoading } = selfApi.useGetRecipeByIdQuery(location.pathname.split('/').pop())
   const [recipe, setRecipe] = useState(null)
 
   const removeFavoriteHandle = (recipe) => {
@@ -50,7 +54,7 @@ export const RecipeAbout = () => {
         <img className='recipeAbout__top__image' src={recipe.image} alt={recipe.title} />
         <div className='recipeAbout__top__text'>
           <div className='recipeAbout__top__text__title'>
-            {recipe?.title}
+            {recipe?.name}
             <span>
               <img
                 src={favorite ? HeartRed : Heart}
@@ -61,30 +65,69 @@ export const RecipeAbout = () => {
           </div>
           <div className='recipeAbout__top__text__text'>
             <div>
-              <div className='recipeAbout__top__text__text__title'>{recipe?.extendedIngredients?.length}</div>
+              <div className='recipeAbout__top__text__text__title'>{recipe?.ingredients_count}</div>
               <div className='recipeAbout__top__text__text__text'>ингридиентов</div>
             </div>
             <div style={{ borderLeft: '1px solid #592e15', borderRight: '1px solid #592e15', padding: '0 100px' }}>
-              <div className='recipeAbout__top__text__text__title'>{recipe?.readyInMinutes}</div>
+              <div className='recipeAbout__top__text__text__title'>{recipe?.time}</div>
               <div className='recipeAbout__top__text__text__text'>мин</div>
             </div>
             <div>
-              <div className='recipeAbout__top__text__text__title'>{recipe?.nutrition?.nutrients[0].amount}</div>
+              <div className='recipeAbout__top__text__text__title'>{recipe?.calories}</div>
               <div className='recipeAbout__top__text__text__text'>ккал</div>
             </div>
           </div>
         </div>
       </div>
       <div className='recipeAbout__title'>
-        {recipe.extendedIngredients.map((ingredient, index) => {
-          return (
-            <div className='recipeAbout__title__item' key={index}>
-              {index}. {ingredient?.original}
-            </div>
-          )
-        })}
+        <div style={{ marginRight: '60px' }}>
+          {recipe.ingredients.map((ingredient, index) => {
+            return (
+              <div className='recipeAbout__title__item' key={index}>
+                {ingredient?.name} <span>{ingredient?.quantity}</span>
+              </div>
+            )
+          })}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginTop: '30px',
+              cursor: 'pointer',
+              fontSize: '24px',
+            }}
+            onClick={() => window.print()}
+          >
+            <img src={Print} alt='Soup' />
+            Распечатать
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginTop: '30px',
+              cursor: 'pointer',
+              fontSize: '24px',
+            }}
+            // onClick={() => window.print()}
+          >
+            <img src={PDF} alt='Soup' />
+            Сохранить в PDF
+          </div>
+        </div>
+        <div className='recipeAbout__title__text'>
+          {recipe.steps.map((step, index) => {
+            return (
+              <div className='recipeAbout__title__text__item' key={index}>
+                <p>{step.split(':')[0] + ':'} </p>
+                <p>{step.split(':')[1]}</p>
+              </div>
+            )
+          })}
+        </div>
       </div>
-      <div className='recipeAbout__text' dangerouslySetInnerHTML={{ __html: `${recipe.instructions}` }}></div>
     </div>
   )
 }

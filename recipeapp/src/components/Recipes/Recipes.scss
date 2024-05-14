@@ -17,6 +17,8 @@
     justify-content: center;
     align-items: center;
 
+    border-radius: 25px;
+
     &__items {
       display: flex;
       flex-wrap: wrap;
@@ -55,12 +57,13 @@
 
   &__content {
     display: flex;
-    margin-top: 20px;
+    margin-top: 70px;
     &__left {
       width: 80%;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
+      // justify-content: space-around;
+      gap: 45px;
     }
     &__right {
       width: 20%;

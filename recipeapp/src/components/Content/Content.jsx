@@ -6,7 +6,8 @@ import Cfr from '../../assets/ChineseFriedRice.svg'
 import tu from '../../assets/ThumbsUp.svg'
 
 import tarel from '../../assets/Tarel.png'
-import sko from '../../assets/Sko.png'
+
+import FastRecipe from '../FastRecipe/FastRecipe'
 
 export const Content = () => {
   const btiArr = [
@@ -22,12 +23,14 @@ export const Content = () => {
         style={{
           display: 'flex',
           gap: '20px',
-          width: '60%',
+          width: '50%',
           height: '35vh',
           justifyContent: 'space-between',
-          alignItems: 'center',
-          marginLeft: '5%',
-          marginTop: '50px',
+          // alignItems: 'center',
+          // marginLeft: '5%',
+          marginTop: '170px',
+          marginRight: '35%',
+          alignSelf: 'flex-end',
         }}
       >
         {btiArr.map((item, index) => {
@@ -37,9 +40,11 @@ export const Content = () => {
       <div className='leftbottomimage'>
         <div style={{ backgroundImage: `url(${tarel})` }} />
       </div>
-      <div className='image'>
+      <FastRecipe />
+
+      {/* <div className='image'>
         <div style={{ backgroundImage: `url(${sko})` }}></div>
-      </div>
+      </div> */}
     </div>
   )
 }
