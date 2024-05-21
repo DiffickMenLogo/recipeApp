@@ -8,24 +8,14 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setSearchValue } from '../../store/slices/searchSlice'
 import { createWorker } from 'tesseract.js'
+import ImageToText from '../InteractText/InteractText'
+
 export const Search = () => {
   // const [parseRecipe, { data: parse, isLoading, isSuccess }] = edenApi.useParceRecipeMutation()
 
-  const parser = async (url) => {
-    try {
-      const worker = createWorker()
-      await worker.load()
-      await worker.loadLanguage('eng')
-      await worker.initialize('eng')
-      const {
-        data: { text },
-      } = await worker.recognize(url)
-      await worker.terminate()
-      return text
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  /**
+   * TODO(developer): Update these variables before running the sample.
+   */
 
   const dispatch = useDispatch()
 
@@ -38,22 +28,7 @@ export const Search = () => {
   const [searchItems, setSearchItems] = useState([])
   const [searchValueHandle, setSearchValueHandle] = useState('')
 
-  // const makeReq = (e) => {
-  //   if (url !== '') {
-  //     const body = {
-  //       file_url: url,
-  //       response_as_dict: true,
-  //       attributes_as_list: false,
-  //       show_original_response: false,
-  //       providers: 'google',
-  //       language: 'en',
-  //     }
-
-  //     parseRecipe(body)
-  //   } else {
-  //     alert('Заполните поле')
-  //   }
-  // }
+  const makeReq = (e) => {}
 
   // useEffect(() => {
   //   if (isSuccess) {
@@ -97,7 +72,7 @@ export const Search = () => {
           variant='standard'
         ></Input>
         <div className='search__box__btns'>
-          <img alt='Camera' className='search__box__btns__camera' src={Camera} />
+          <img alt='Camera' className='search__box__btns__camera' src={Camera} onClick={() => setOpen(true)} />
           <div onClick={simpleSearch} className='search__box__btns__searchIcon'>
             <img alt='Search' src={Searchi} />
           </div>
@@ -132,7 +107,7 @@ export const Search = () => {
         </div>
       </div>
 
-      {/* <Modal open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClose={() => setOpen(false)}>
+      <Modal open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClose={() => setOpen(false)}>
         <Box
           sx={{
             width: '30%',
@@ -144,16 +119,9 @@ export const Search = () => {
             backgroundColor: '#fff',
           }}
         >
-          <TextField value={url} onChange={(e) => setUrl(e.target.value)} sx={{ width: '90%' }} placeholder='Введите url...' variant='outlined' />
-          {isLoading ? (
-            <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
-          ) : (
-            <Button variant='contained' sx={{ width: '90%', marginTop: '10px' }} onClick={makeReq}>
-              Найти
-            </Button>
-          )}
+          <ImageToText />
         </Box>
-      </Modal> */}
+      </Modal>
     </div>
   )
 }
