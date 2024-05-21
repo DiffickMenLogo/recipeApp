@@ -32,9 +32,16 @@ export const Recipes = () => {
 
   const [page, setPage] = useState(1)
 
+  const [sortByTime, setSortByTime] = useState(false)
+
+
   //favorites
 
   const dispatch = useDispatch()
+
+  const sortRecipesByTime = (recipes) => {
+    return recipes.sort((a, b) => a.time - b.time)
+  }
 
   const user = JSON.parse(localStorage.getItem('user'))
 
@@ -64,27 +71,18 @@ export const Recipes = () => {
   const [recipes, setRecipes] = useState([])
   // const [newRecipes, setNewRecipes] = useState([])
 
-  function convertMinutesToHoursString(minutes) {
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    let result = ''
-
-    if (hours > 0) result += `${hours} ч `
-    if (remainingMinutes > 0) result += `${remainingMinutes} мин`
-
-    return result.trim()
-  }
 
   const { data, isLoading } = selfApi.useGetRecipesQuery(
     {
       page: page,
       limit: perPage,
-      time: convertMinutesToHoursString(maxReadyTime),
+      time: maxReadyTime,
       calories: minCalories,
       type: type,
       coutIngridients: countIngridients,
       search: searchRcipe,
       ingredients: searchValue ? searchValue.join(',') : '',
+      sortTime: sortByTime
     },
     {
       refetchOnMountOrArgChange: true,
@@ -105,6 +103,7 @@ export const Recipes = () => {
       refetchOnMountOrArgChange: true,
     },
   )
+
 
   useEffect(() => {
     console.log(data, 'data')
@@ -148,7 +147,7 @@ export const Recipes = () => {
         <div>
           <Switch value={searchSwitch} onChange={() => setSearchSwitch(!searchSwitch)} />
           {searchSwitch ? (
-            <span style={{ marginLeft: '10px', color: 'white' }}>Поиск по рецептам</span>
+            <span style={{ marginLeft: '10px', color: 'white' }}>Поиск по названию</span>
           ) : (
             <span style={{ marginLeft: '10px', color: 'white' }}>Поиск по ингредиентам</span>
           )}
@@ -160,7 +159,7 @@ export const Recipes = () => {
             returnKeyType='search'
             autoFocus={true}
             value={searchRcipe}
-            label='Поиск рецептов'
+            label='Введите название...'
             variant='outlined'
           />
         ) : (
@@ -176,7 +175,7 @@ export const Recipes = () => {
               sx={{ width: '60%', background: 'white', borderRadius: '10px' }}
               returnKeyType='search'
               autoFocus={true}
-              label='Поиск рецептов'
+              label='Введите ингредиенты...'
               variant='outlined'
               // onChange={(e) => setSearchRcipe(e.target.value)}
               onKeyPress={(e) => {
@@ -195,9 +194,15 @@ export const Recipes = () => {
           </div>
         )}
       </div>
-      <div className='recipes__search__bottom'>
-        Найдено <span>{recipeLengthLoading ? 'Загрузка...' : recipeLength.count}</span> рецептов
+      <div className='recipes__search__bottom' style={{ display: 'flex', alignItems: 'center' }}>
+        Найдено&nbsp; <span>{recipeLengthLoading ? 'Загрузка...' : recipeLength.count} </span>&nbsp;рецептов
+        <div style={{ display: 'flex', alignItems: 'center', marginLeft: '920px' }}>
+        <Switch checked={sortByTime} onChange={() => setSortByTime(!sortByTime)}/>
+        <span style={{ marginLeft: '10px', color: 'rgba(89, 46, 21, 0.53)' }}>Сортировка по времени</span>
       </div>
+      </div>
+
+    
       <div className='recipes__content'>
         <div className='recipes__content__left'>
           {isLoading ? 'Загрузка...' : recipes.map((item, index) => <RecipeItem key={index} recipe={item} />)}
@@ -228,12 +233,12 @@ export const Recipes = () => {
             gap: '35px',
           }}
         >
-          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} onClick={() => removePage()}>
+          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', color: '#A79083' }} onClick={() => removePage()}>
             <ArrowLeft />
             Предыдущая
           </div>
-          <div>{page}</div>
-          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} onClick={() => addPage()}>
+          <div style = {{color: '#A79083'}}>{page}</div>
+          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', color: '#A79083' }} onClick={() => addPage()}>
             Следующая
             <ArrowRight />
           </div>

@@ -59,7 +59,8 @@ export const RecipeItem = ({ recipe }) => {
   const { image, name, _id } = recipe
   return (
     <div className='recipeItem'>
-      <div className='recipeItem__image' onClick={() => navigate(`/recipes/${_id}`)} style={{ backgroundImage: `url(${image})` }}></div>
+      <div className='recipeItem__image' onClick={() => window.open(`/recipes/${_id}`, '_blank')}
+        style={{ backgroundImage: `url(${image})` }}></div>
       <div className='recipeItem__title'>{name} </div>
       <div className='recipeItem__bottom'>
         <div className='recipeItem__bottom__time'>

@@ -20,6 +20,7 @@ export const selfApi = createApi({
           coutIngridients: query.coutIngridients,
           search: query.search,
           ingredients: query.ingredients,
+          sortTime: query.sortTime
         },
       }),
     }),

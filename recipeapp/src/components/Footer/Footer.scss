@@ -6,7 +6,7 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 70px;
-  gap: 10%;
+  gap: 7%;
   align-items: center;
   .footer-column {
     display: flex;
@@ -63,5 +63,12 @@
     img {
       // Указать необходимые стили
     }
+  }
+}
+
+
+@media print {
+  .footer{
+    display: none !important;
   }
 }

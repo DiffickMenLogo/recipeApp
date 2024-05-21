@@ -5,6 +5,7 @@ import { ReactComponent as InstagramIcon } from '../../assets/Instagram.svg'
 import { ReactComponent as FacebookIcon } from '../../assets/Viber.svg'
 import { ReactComponent as TwitterIcon } from '../../assets/Telegram.svg'
 import omlet from '../../assets/Omlet.png'
+import { colors } from '@mui/material'
 
 const Footer = () => {
   return (
@@ -21,28 +22,28 @@ const Footer = () => {
         <h3 className='footer-heading'>Меню</h3>
         <ul className='footer-links'>
           <li>
-            <a href='/'>Главная страница</a>
+            <a style={{color:"#A79083"}} href='/'>Главная страница</a>
           </li>
           <li>
-            <a href='/favorites'>Избранное</a>
+            <a style={{color:"#A79083"}} href='/favorites'>Избранное</a>
           </li>
           <li>
-            <a href='/recipes'>Рецепты</a>
+            <a style={{color:"#A79083"}} href='/recipes'>Рецепты</a>
           </li>
           <li>
-            <a href='/about'>О нас</a>
+            <a style={{color:"#A79083"}} href='/about'>О нас</a>
           </li>
         </ul>
       </div>
       <div className='footer-column'>
         <h3 className='footer-heading'>Контакты</h3>
         <p className='contact-info'>
-          <p>Телефон:</p>
-          <p>+7 123 456-78-90</p>
+          <p style={{color:"#A79083"}}>Телефон:</p>
+          <p style={{color:"#FFFFFF", margin : 0}}>+375 33 379-97-35</p>
         </p>
         <p className='contact-info'>
-          <p>E-mail:</p>
-          <p>email@example.com</p>
+          <p style={{color:"#A79083"}}>E-mail:</p>
+          <p style={{color:"#FFFFFF", margin : 0}}>Recipes@mail.ru</p>
         </p>
       </div>
       <div className='footer-image'>

@@ -126,4 +126,107 @@
 
     margin-bottom: 20px;
   }
+
+  .recipeAbout__title{
+    &__box{
+      margin-right: 60px;
+      
+    }
+  }
+
+  @media print {
+    /* Скрытие изображения избранного */
+    .recipeAbout__top__text__title img {
+      display: none;
+    }
+
+
+    .recipeAbout{
+      &__title{
+          &__box{
+            .print{
+              display: none !important;
+            }
+          }
+        }
+      }
+
+      .header{
+        display: none !important;
+      }
+
+      .recipeAbout__top {
+        /* Настройки для блока .recipeAbout__top при печати */
+        .recipeAbout__top__image {
+          margin-left: -300px; /* Измените значение в соответствии с вашими требованиями */
+        }
+
+        &__text {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* Горизонтальное центрирование всех дочерних элементов */
+          margin-left: 300px;
+      
+          &__title {
+            text-align: center; /* Выравнивание текста по центру */
+          }
+        }
+
+      }
+
+      .recipeAbout__title{
+        
+        &__box{
+          margin-left: 20px !important;
+          
+        }
+
+        &__text{
+          margin-left: 0px;
+          width: auto;
+          &__item{
+            width: 1300px;
+
+          }
+        }
+     }
+    
+      .recipeAbout__title {
+        /* Настройки для блока .recipeAbout__title при печати */
+        
+      }
+    
+
+
+    // .header{
+    //   display: none;
+    // }
+
+    // .print{
+    //   display: none;
+    // }
+  
+    /* Сокрытие нижнего колонтитула */
+    @page {
+      margin: 0;
+    }
+  
+    /* Масштабирование содержимого */
+    body {
+      transform: scale(0.4);
+      transform-origin: top left;
+    }
+  
+    /* Удаление текста "React App" из верхнего колонтитула */
+    @page :left {
+      margin-left: 0;
+    }
+    @page :right {
+      margin-right: 0;
+    }
+
+  }
+
+  
 }

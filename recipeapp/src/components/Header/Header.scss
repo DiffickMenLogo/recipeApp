@@ -146,3 +146,9 @@
   white-space: nowrap;
   width: fit-content;
 }
+
+@media print {
+  .header{
+    display: none;
+  }
+}

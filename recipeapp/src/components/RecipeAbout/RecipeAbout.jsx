@@ -9,6 +9,9 @@ import { CircularProgress } from '@mui/material'
 import { addFavorite, removeFavorite } from '../../store/slices/favoritesSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { selfApi } from '../../store/services/selfApi'
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 import PDF from '../../assets/PDF.svg'
 import Print from '../../assets/Print.svg'
@@ -66,7 +69,13 @@ export const RecipeAbout = () => {
           <div className='recipeAbout__top__text__text'>
             <div>
               <div className='recipeAbout__top__text__text__title'>{recipe?.ingredients_count}</div>
-              <div className='recipeAbout__top__text__text__text'>ингридиентов</div>
+              <div className='recipeAbout__top__text__text__text' style={{ textAlign: 'center' }}>
+              {recipe?.ingredients_count === 1
+                ? 'ингредиент'
+                : recipe?.ingredients_count >= 2 && recipe?.ingredients_count <= 4
+                ? 'ингредиента'
+                : 'ингредиентов'}
+            </div>
             </div>
             <div style={{ borderLeft: '1px solid #592e15', borderRight: '1px solid #592e15', padding: '0 100px' }}>
               <div className='recipeAbout__top__text__text__title'>{recipe?.time}</div>
@@ -80,7 +89,7 @@ export const RecipeAbout = () => {
         </div>
       </div>
       <div className='recipeAbout__title'>
-        <div style={{ marginRight: '60px' }}>
+        <div className='recipeAbout__title__box'>
           {recipe.ingredients.map((ingredient, index) => {
             return (
               <div className='recipeAbout__title__item' key={index}>
@@ -88,7 +97,7 @@ export const RecipeAbout = () => {
               </div>
             )
           })}
-          <div
+          <div className='print'
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -100,29 +109,16 @@ export const RecipeAbout = () => {
             onClick={() => window.print()}
           >
             <img src={Print} alt='Soup' />
-            Распечатать
+            Распечатать/Сохранить в PDF
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              marginTop: '30px',
-              cursor: 'pointer',
-              fontSize: '24px',
-            }}
-            // onClick={() => window.print()}
-          >
-            <img src={PDF} alt='Soup' />
-            Сохранить в PDF
-          </div>
+          
         </div>
         <div className='recipeAbout__title__text'>
           {recipe.steps.map((step, index) => {
             return (
               <div className='recipeAbout__title__text__item' key={index}>
-                <p>{step.split(':')[0] + ':'} </p>
-                <p>{step.split(':')[1]}</p>
+                <p className ='text'>{step.split(':')[0] + ':'} </p>
+                <p className ='text'>{step.split(':')[1]}</p>
               </div>
             )
           })}
